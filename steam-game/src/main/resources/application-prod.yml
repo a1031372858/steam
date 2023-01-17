@@ -1,0 +1,97 @@
+server:
+  port: 9091
+
+spring:
+  application:
+    name: steam-game
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/usermanager
+    username: postgres
+    password: postgres
+
+
+  redis:
+    # Redis 数据库索引（默认为 0）
+    database: 0
+    host: localhost
+    port: 6379
+    # Redis 服务器连接密码（默认为空）
+    password:
+    # springboot 2.0 redis默认客户端已换成lettuce
+    timeout: 5000
+
+  rabbitmq:
+    username: admin
+    password: admin
+    virtual-host: /
+    host: 47.94.163.139
+    port: 5672
+    publisher-confirm-type: correlated
+    listener:
+      simple:
+        default-requeue-rejected: false
+        acknowledge-mode: manual
+        retry:
+          enabled: false
+          max-attempts: 3
+          initial-interval: 2000
+
+  #quartz定时任务
+  quartz:
+  #初始化表结构
+    jdbc.initialize-schema: ALWAYS
+    job-store-type: jdbc
+
+    ##同样名字的job在插入到表中会报错，设置为true会覆盖之前相同名字的job
+    overwrite-existing-jobs: true
+    ##根据主机以及时间戳生成实例id
+    properties.org.quartz.scheduler.instanceId: AUTO
+    #SimpleThreadPool是Quartz.Net中自带的线程池，默认个数为10个，代表一个Scheduler同一时刻并发的最多只能执行10个job，超过10个的job需要排队等待。
+    properties.org.quartz.threadPool.class: org.quartz.simpl.SimpleThreadPool
+    # threadCount和threadPriority将以setter的形式注入ThreadPool实例
+    # 并发个数  如果你只有几个工作每天触发几次 那么1个线程就可以,如果你有成千上万的工作，每分钟都有很多工作 那么久需要50-100之间.
+    # 只有1到100之间的数字是非常实用的
+    properties.org.quartz.threadPool.threadCount: 2
+    ##mysql使用的驱动代理
+    #  quartz.properties.org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+    properties.org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+
+    properties.org.quartz.jobStore.tablePrefix: QRTZ_
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://www.xuyachang.xyz:7001/eureka/
+
+
+mybatis:
+  mapperLocations: classpath:com.xu.mapper/*.xml
+
+logging:
+  level:
+    org.springframework: WARN
+    org.springframework.web: WARN
+    org.springframework.security: WARN
+    org.springframework.security.oauth2: WARN
+    com.xu: DEBUG
+    root: info
+
+  file.name: weSteam.log
+
+
+steam.test:
+  testName: xuchang
+  prefix: prefix
+  suffix: suffix
+#dubbo:
+#  application:
+#    name: we-steam-game
+#  registry:
+#    address: 47.94.163.139:2181
+#    protocol: zookeeper
+#  #  protocol:
+#  #    name: dubbo
+#  #    port: 20881
+#  monitor:
+#    protocol: registry

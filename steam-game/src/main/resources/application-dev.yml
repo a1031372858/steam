@@ -1,0 +1,55 @@
+server:
+  port: 9091
+
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://172.22.172.169:5432/usermanager
+    username: postgres
+    password: postgres
+
+  redis:
+    # Redis 数据库索引（默认为 0）
+    database: 0
+    host: localhost
+    port: 6379
+    # Redis 服务器连接密码（默认为空）
+    password:
+    # springboot 2.0 redis默认客户端已换成lettuce
+    timeout: 5000
+
+  rabbitmq:
+    username: admin
+    password: admin
+    virtual-host: /
+    host: 47.94.163.139
+    port: 5672
+    publisher-confirm-type: correlated
+    listener:
+      simple:
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 2000ms
+
+mybatis:
+  mapperLocations: classpath:com.xu.mapper/*.xml
+
+logging:
+  level:
+    root: info
+  file.name: weSteam.log
+
+dubbo:
+  application:
+    name: we-steam-game
+  registry:
+    address: 172.22.172.169:2181
+    protocol: zookeeper
+#  protocol:
+#    name: dubbo
+#    port: 20881
+  monitor:
+    protocol: registry

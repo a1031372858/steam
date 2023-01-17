@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xu.mapper.AuthorityMapper" >
+    <resultMap type="com.xu.bean.Authority" id="authorityResultMap">
+        <id column="authority_id" property="authorityId"/>
+        <result column="authority_code" property="authorityCode"/>
+        <result column="authority_name" property="authorityName"/>
+
+        <result column="update_date" property="updateDate"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="create_date" property="createDate"/>
+        <result column="create_user" property="createUser"/>
+    </resultMap>
+
+    <select id="selectAuthorityListByRoleId" resultMap="authorityResultMap">
+        select a.* from role_authority ra left join authority a on ra.authority_id=a.authority_id
+        <where>
+            ra.role_id=#{roleId};
+        </where>
+    </select>
+
+    <select id="selectAuthorityListByRoleIdList" resultMap="authorityResultMap">
+        select distinct a.* from role_authority ra left join authority a on ra.authority_id=a.authority_id
+        <where>
+            <if test="roleList!=null">
+                <if test="roleList.size>0">
+                    ra.role_id in
+                    <foreach item="item" index="index" collection="roleList" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </if>
+            <if test="roleList==null">
+                AND false
+            </if>
+        </where>
+    </select>
+</mapper>

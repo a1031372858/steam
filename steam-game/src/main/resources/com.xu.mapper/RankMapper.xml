@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xu.mapper.RankMapper" >
+    <resultMap type="com.xu.bean.Rank" id="rankResultMap">
+        <id column="rank_id" property="rankId"/>
+        <result column="user_id" property="userId"/>
+        <result column="game_id" property="gameId"/>
+        <result column="grade" property="grade"/>
+
+        <result column="update_date" property="updateDate"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="create_date" property="createDate"/>
+        <result column="create_user" property="createUser"/>
+    </resultMap>
+
+    <resultMap type="com.xu.bean.RankCustomWebDto" id="rankCustomWebDtoResultMap">
+        <id column="rank_id" property="rankId"/>
+        <result column="user_id" property="userId"/>
+        <result column="game_id" property="gameId"/>
+        <result column="grade" property="grade"/>
+        <result column="display_name" property="displayName"/>
+    </resultMap>
+
+    <insert id="insertRank" parameterType="com.xu.bean.Rank">
+        insert into public.rank(rank_id,user_id,game_id,grade,update_date,update_user,create_date,create_user) values(#{rankId},#{userId},#{gameId},#{grade},now(),#{updateUser},now(),#{createUser});
+    </insert>
+
+    <select id="selectRanks" resultMap="rankCustomWebDtoResultMap">
+        select r.*,u.display_name from public.rank r left join public.user_detail u on r.user_id=u.user_id
+        <where>
+            AND game_id=#{gameId}
+            AND (r.grade <![CDATA[<]]> #{grade} OR (r.grade=#{grade} AND r.update_date>#{updateDate}))
+        </where>
+        order by r.grade DESC,r.update_date limit 20
+    </select>
+
+    <select id="selectRank" resultMap="rankCustomWebDtoResultMap">
+        select r.*,u.display_name from public.rank r left join public.user_detail u on r.user_id=u.user_id order by r.grade DESC,r.update_date
+    </select>
+</mapper>

@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "name": "steam.test",
+      "type": "com.xu.TestProperties",
+      "sourceType": "com.xu.TestProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "steam.test.prefix",
+      "type": "java.lang.String",
+      "sourceType": "com.xu.TestProperties"
+    },
+    {
+      "name": "steam.test.suffix",
+      "type": "java.lang.String",
+      "sourceType": "com.xu.TestProperties"
+    },
+    {
+      "name": "steam.test.test-name",
+      "type": "java.lang.String",
+      "sourceType": "com.xu.TestProperties"
+    }
+  ],
+  "hints": []
+}
